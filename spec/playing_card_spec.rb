@@ -28,6 +28,25 @@ describe 'PlayingCard' do
   }.to raise_error PlayingCard::InvalidSuit
   end
 
+  context '#value' do
+
+    it 'returns the correct value of a suit' do
+      card1=PlayingCard.new('2', 'Diamonds')
+      result1=card1.value
+      expect(result1).to eq 0
+
+      card2=PlayingCard.new('J', 'Diamonds')
+      result2=card2.value
+      expect(result2).to eq 9
+
+      card3=PlayingCard.new('A', 'Diamonds')
+      result3=card3.value
+      expect(result3).to eq 12
+
+      
+    end
+  end
+
 
 
 end
