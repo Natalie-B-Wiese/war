@@ -28,7 +28,7 @@ describe 'PlayingCard' do
   }.to raise_error PlayingCard::InvalidSuit
   end
 
-  context '#value' do
+  describe '#value' do
 
     it 'returns the correct value of a suit' do
       card1=PlayingCard.new('2', 'Diamonds')
@@ -45,6 +45,25 @@ describe 'PlayingCard' do
 
       
     end
+  end
+
+  describe '#to_s' do
+    context 'when rank is 2 and suit is Diamonds' do
+      it 'returns correct result' do
+        card=PlayingCard.new('2', 'Diamonds')
+        result=card.to_s
+        expect(result).to eq "2 of Diamonds"
+      end
+    end
+
+    context 'when rank is K and suit is Hearts' do
+      it 'returns correct result' do
+        card=PlayingCard.new('K', 'Hearts')
+        result=card.to_s
+        expect(result).to eq "K of Hearts"
+      end
+    end
+    
   end
 
 

@@ -23,4 +23,8 @@ class PlayingCard
       RANKS.index(@rank)
     end
 
+    def to_s
+      "#{rank} of #{suit}"
+    end
+
 end 
