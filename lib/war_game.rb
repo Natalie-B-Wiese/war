@@ -15,6 +15,38 @@ class WarGame
     @deck.shuffle
   end
 
+  def play_round(cards_on_table=[])
+
+    winning_player=round_winner
+    
+    if winning_player.nil?
+      cards_on_table.push(player1.take_top_card)
+      cards_on_table.push(player2.take_top_card)
+      play_round(cards_on_table)
+    else
+      losing_player=opposite_player(winning_player)
+      losing_card=losing_player.take_top_card
+
+      cards_on_table.push(losing_card)
+
+      cards_on_table_s=""
+      cards_on_table[0...-1].each do |card|
+        cards_on_table_s+="#{card}, "
+      end
+      cards_on_table_s+="and a " unless cards_on_table.length==1
+
+      cards_on_table_s+=cards_on_table[-1].to_s
+
+
+      # add the cards to the winning player
+      cards_on_table.each do |card|
+        winning_player.add_card(card)
+      end
+      return "#{winning_player.name} took a #{cards_on_table_s} with a #{winning_player.top_card}"
+    end
+  end
+
+
   def deal
     while @deck.cards_left>0
       @player1.add_card(@deck.take_top_card)
@@ -33,6 +65,13 @@ class WarGame
     else
       return nil
     end
+  end
+
+  # returns the opposite player to the passed in player
+  def opposite_player(player)
+    return player2 if player==player1
+    return player1 if player==player2
+    nil
   end
 
   def winner
