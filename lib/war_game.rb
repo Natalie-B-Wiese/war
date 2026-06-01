@@ -37,7 +37,8 @@ class WarGame
 
   def winner
     return @player2 if (@player1.card_count==0)
-    return @player1 if (@player1.card_count==0)
+    return @player1 if (@player2.card_count==0)
+    return nil
   end
     
 end 

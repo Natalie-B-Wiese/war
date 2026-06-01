@@ -74,7 +74,7 @@ describe 'WarGame' do
     context 'when both players still have cards' do
 
       it 'return nil' do  
-        game=WarGame.new 
+        game=WarGame.new
         allow(game.player1).to receive(:card_count).and_return(5)
         allow(game.player2).to receive(:card_count).and_return(10)       
         result=game.winner
@@ -89,7 +89,7 @@ describe 'WarGame' do
         allow(game.player1).to receive(:card_count).and_return(0)
         allow(game.player2).to receive(:card_count).and_return(10)
         result=game.winner
-        expect(result).to eq player2
+        expect(result).to eq game.player2
       end
     end
 
@@ -101,7 +101,7 @@ describe 'WarGame' do
         allow(game.player2).to receive(:card_count).and_return(0)
 
         result=game.winner
-        expect(result).to eq player1
+        expect(result).to eq game.player1
       end
     end
   end
