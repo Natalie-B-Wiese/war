@@ -27,6 +27,7 @@ class WarGame
     else
       losing_player=opposite_player(winning_player)
       losing_card=losing_player.take_top_card
+      winning_card=winning_player.take_top_card
 
       cards_on_table.push(losing_card)
 
@@ -38,12 +39,14 @@ class WarGame
 
       cards_on_table_s+=cards_on_table[-1].to_s
 
+      cards_on_table.push(winning_card)
+
 
       # add the cards to the winning player
       cards_on_table.each do |card|
         winning_player.add_card(card)
       end
-      return "#{winning_player.name} took a #{cards_on_table_s} with a #{winning_player.top_card}"
+      return "#{winning_player.name} took a #{cards_on_table_s} with a #{winning_card}"
     end
   end
 
