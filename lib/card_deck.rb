@@ -20,6 +20,11 @@ class CardDeck
   end
 
   def shuffle
-    @cards=@cards.shuffle
+    shuffled=@cards.shuffle
+    while shuffled==@cards
+      shuffled=@cards.shuffle
+    end
+
+    @cards=shuffled
   end
 end
