@@ -1,7 +1,9 @@
 require 'socket'
+require_relative 'server_game'
+require_relative 'client'
+require_relative 'war_game'
 
 class WarSocketServer
-  NUM_PLAYERS_PER_GAME=2
 
   def initialize
   end
@@ -24,7 +26,9 @@ class WarSocketServer
   end
 
   def accept_new_client(player_name = "Random Player")
-    client = @server.accept_nonblock
+    client_socket = @server.accept_nonblock
+    client=Client.new(client_socket, player_name)
+
     clients << client
     # associate player and client
     client.puts 'Welcome to War!'
@@ -33,15 +37,29 @@ class WarSocketServer
   end
 
   def create_game_if_possible
-    return unless clients.count == NUM_PLAYERS_PER_GAME
+    return unless clients.count == WarGame::NUM_PLAYERS
 
     clients.each do |client|
       client.puts 'War is starting...'
     end
 
-    # check if there are two clients
-    games << 1
+    new_game=ServerGame.new(clients[0], clients[1], WarGame)
+    games << new_game
 
+    return new_game
+
+  end
+
+  def run_game(game)
+    #game.start
+  end
+
+  def clients_ready?
+    clients.each do |client|
+      # TODO: if the message has been sent, then ask for a response
+      #read_nonblock(1000) look at capture_output method in
+      client.check_ready!
+    end
   end
 
   def stop

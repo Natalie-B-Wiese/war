@@ -3,6 +3,7 @@ require_relative 'card_deck.rb'
 
 
 class WarGame
+  NUM_PLAYERS=2
   attr_reader :player1, :player2, :deck
 
   def initialize(player1_name='Player 1', player2_name='Player 2')

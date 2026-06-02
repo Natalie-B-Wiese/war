@@ -89,4 +89,40 @@ describe WarSocketServer do
   #   make sure the mock client gets appropriate output
   #   make sure the next round isn't played until both clients say they are ready to play
   #   ...
+
+  describe '#clients_ready?' do
+    let(:client1) {MockWarSocketClient.new(@server.port_number)}
+    let(:client2) {MockWarSocketClient.new(@server.port_number)}
+      
+    before do
+      @clients.push client1
+      @server.accept_new_client('Player 1')
+
+      @clients.push client2
+      @server.accept_new_client('Player 2')
+
+      #@server.create_game_if_possible
+    end
+
+    it 'sends message check_ready! to each client' do
+      expect(@server.clients[0]).to receive(:check_ready!)
+      expect(@server.clients[1]).to receive(:check_ready!)
+
+      @server.clients_ready?
+    end
+
+    it 'returns false if one or more clients are not ready' do
+      
+    end
+
+    it 'returns true if all clients are ready' do
+      
+    end
+
+
+
+
+  end
+
+
 end
