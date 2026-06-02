@@ -5,9 +5,9 @@ require_relative 'card_deck.rb'
 class WarGame
   attr_reader :player1, :player2, :deck
 
-  def initialize
-    @player1=WarPlayer.new('Player 1')
-    @player2=WarPlayer.new('Player 2')
+  def initialize(player1_name='Player 1', player2_name='Player 2')
+    @player1=WarPlayer.new(player1_name)
+    @player2=WarPlayer.new(player2_name)
     @deck=CardDeck.new
   end
 
