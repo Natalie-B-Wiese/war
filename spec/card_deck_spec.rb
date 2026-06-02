@@ -8,21 +8,36 @@ describe 'CardDeck' do
     expect(deck.cards_left).to eq 52
   end
 
-  it 'should deal the top card' do
-    deck = CardDeck.new
-    card = deck.take_top_card
-    expect(card).to_not be_nil
-    expect(card).to be_a PlayingCard
-    expect(card).to respond_to(:rank)
+  describe '#take_top_card' do
+    it 'returns the top card' do
+      deck = CardDeck.new
+      card = deck.take_top_card
+      expect(card).to_not be_nil
+      expect(card).to be_a PlayingCard
+      expect(card).to respond_to(:rank)
+    end
 
-    expect(deck.cards_left).to eq 51
+    it 'gives a unique card each time' do
+      deck = CardDeck.new
+      card1 = deck.take_top_card
+      card2 = deck.take_top_card
+      expect(card1).not_to eq card2
+    end
+
   end
 
-  it 'deal gives a unique card each time' do
-    deck = CardDeck.new
-    card1 = deck.take_top_card
-    card2 = deck.take_top_card
-    expect(card1).not_to eq card2
+  describe '#cards_left' do
+    it 'returns 52 on full deck' do
+      deck = CardDeck.new
+      expect(deck.cards_left).to eq 52
+    end
+    it 'returns cards_left for non-full deck' do
+      deck = CardDeck.new
+      deck.take_top_card
+      deck.take_top_card
+      deck.take_top_card
+      expect(deck.cards_left).to eq 49
+    end
   end
 
   describe '#shuffle' do
