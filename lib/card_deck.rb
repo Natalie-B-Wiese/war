@@ -1,7 +1,7 @@
 require_relative '../lib/playing_card'
 class CardDeck
 
-  attr_reader :cards_left, :cards
+  attr_reader :cards
 
   def initialize
     @cards=PlayingCard::SUITS.flat_map do |suit|
