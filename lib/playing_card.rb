@@ -20,7 +20,7 @@ class PlayingCard
     end
 
     def value
-      RANKS.index(@rank)
+      RANKS.index(rank)
     end
 
     def to_s

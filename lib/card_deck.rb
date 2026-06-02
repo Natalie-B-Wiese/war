@@ -12,17 +12,17 @@ class CardDeck
   end
 
   def cards_left
-    @cards.length
+    cards.length
   end
 
   def take_top_card
-    @cards.shift
+    cards.shift
   end
 
   def shuffle
-    shuffled=@cards.shuffle
-    while shuffled==@cards
-      shuffled=@cards.shuffle
+    shuffled=cards.shuffle
+    while shuffled==cards
+      shuffled=cards.shuffle
     end
 
     @cards=shuffled
