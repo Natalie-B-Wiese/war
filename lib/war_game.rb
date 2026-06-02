@@ -13,6 +13,7 @@ class WarGame
 
   def start
     @deck.shuffle
+    deal
   end
 
   def play_round(cards_on_table=[])

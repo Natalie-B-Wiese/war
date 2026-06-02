@@ -16,11 +16,14 @@ describe 'WarGame' do
 
 
   describe "#start" do
-    it 'creates a new shuffled deck' do
+    it 'deals the deck to the players' do
       game=WarGame.new
       game.start
-      expect(game.deck.cards_left).to_not eq 0
+      expect(game.deck.cards_left).to eq 0
+      expect(game.player1.card_count).to_not eq 0
+      expect(game.player2.card_count).to_not eq 0
     end
+
   end
 
   describe '#deal' do
