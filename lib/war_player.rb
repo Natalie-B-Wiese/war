@@ -10,20 +10,6 @@ class WarPlayer
     @cards.push(card)
   end
 
-  def take_top_card
-    @cards.shift
-  end
-
-  def top_card_value
-    top_card.value
-  end
-
-  def top_card
-    @cards[0]
-  end
-
-  def card_count
-    @cards.length
-  end
+  
 
 end 
