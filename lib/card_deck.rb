@@ -1,7 +1,7 @@
 require_relative '../lib/playing_card'
 class CardDeck
 
-  attr_reader :cards
+  attr_accessor :cards
 
   def initialize
     @cards=PlayingCard::SUITS.flat_map do |suit|
@@ -25,6 +25,6 @@ class CardDeck
       shuffled=cards.shuffle
     end
 
-    @cards=shuffled
+    self.cards=shuffled
   end
 end
