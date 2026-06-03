@@ -122,6 +122,13 @@ describe Client do
 
         expect(client.is_message_sent).to eq true
       end
+
+      it 'updates is_ready to be value of read_socket' do
+        client.is_ready=false
+        client.is_message_sent=false
+        client.check_ready!
+        expect(client.is_ready).to eq true
+      end
     end
 
     context 'if the player is not ready and has received a message' do
@@ -146,6 +153,13 @@ describe Client do
         client.is_ready=true
 
         expect(socket).to_not receive(:puts).with('Are you ready?')
+        client.check_ready!
+      end
+
+      it 'does not call read_socket' do
+        client.is_ready=true
+
+        expect(client).to_not receive(:read_socket)
         client.check_ready!
       end
 

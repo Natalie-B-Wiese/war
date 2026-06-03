@@ -111,11 +111,33 @@ describe WarSocketServer do
       @server.clients_ready?
     end
 
-    it 'returns false if one or more clients are not ready' do
+    it 'returns false if both clients are not ready' do
+      @server.clients[0].is_ready=false
+      @server.clients[1].is_ready=false
+
+      result=@server.clients_ready?
+
+      expect(result).to eq false
+      
+    end
+
+    it 'returns false if one client is not ready' do
+      @server.clients[0].is_ready=false
+      @server.clients[1].is_ready=true
+
+      result=@server.clients_ready?
+
+      expect(result).to eq false
       
     end
 
     it 'returns true if all clients are ready' do
+      @server.clients[0].is_ready=true
+      @server.clients[1].is_ready=true
+
+      result=@server.clients_ready?
+
+      expect(result).to eq false
       
     end
 

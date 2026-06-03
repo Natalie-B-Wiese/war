@@ -26,7 +26,8 @@ class Client
 
 
   def check_ready!
-    socket.puts 'Are you ready?' unless ready? || received_message?
+    return if ready?
+    socket.puts 'Are you ready?' unless received_message?
     self.is_message_sent=true
     self.is_ready=read_socket
   end
