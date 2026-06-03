@@ -41,9 +41,14 @@ class ServerGame
     game.winner
   end
 
-  private
   def play_round
-    game.play_round
+    round_result=game.play_round
+
+    clients.each do |client|
+      client.reset_variables
+      client.puts(round_result)
+    end
+    
   end
 
 end

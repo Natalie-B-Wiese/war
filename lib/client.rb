@@ -12,6 +12,11 @@ class Client
     @is_message_sent=false
   end
 
+  def reset_variables
+    @is_message_sent=false
+    @is_ready=false
+  end
+
   def puts(message)
     socket.puts(message)
   end

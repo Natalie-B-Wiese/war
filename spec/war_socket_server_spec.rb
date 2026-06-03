@@ -88,8 +88,8 @@ describe WarSocketServer do
       game.start
 
       @server.try_play_round(game)
-      expect(client1.capture_output).to match /ready/i
-      expect(client2.capture_output).to match /ready/i
+      expect(client1.capture_output).to match /ready\?/i
+      expect(client2.capture_output).to match /ready\?/i
 
       @server.try_play_round(game)
       client1.capture_output
@@ -116,7 +116,7 @@ describe WarSocketServer do
       expect(client2.capture_output).to be_empty
     end
 
-    it 'when all player are ready sends a both player ready message to both players' do
+    it 'when all player are ready sends a message to both players' do
       game=@server.games[0]
       game.start
 
@@ -135,7 +135,69 @@ describe WarSocketServer do
       expect(client2.capture_output).to match /both/i
       expect(client1.capture_output).to match /both/i
     end
+
+    it 'when all player are ready it calls play_round' do
+      game=@server.games[0]
+      game.start
+
+      client1.provide_input('I am sooooo ready')
+      client2.provide_input('\n')
+
+      expect(game).to receive(:play_round)
+      @server.try_play_round(game)
+    end
+
+    it 'on each round it resets ready? and received_message? of all clients to false' do
+      game=@server.games[0]
+      game.start
+
+      client1.provide_input('I am sooooo ready')
+      client2.provide_input('\n')
+      @server.try_play_round(game)
+
+      client1.capture_output
+      client2.capture_output
+
+      @server.try_play_round(game)
+
+      expect(client1.capture_output).to match /ready\?/i
+      expect(client2.capture_output).to match /ready\?/i
+      
+    end
+
     
+  end
+
+  context 'play_round' do
+    let(:client1) {MockWarSocketClient.new(@server.port_number)}
+    let(:client2) {MockWarSocketClient.new(@server.port_number)}
+
+    before do
+      @clients.push(client1)
+      @server.accept_new_client("Player 1")
+
+      @clients.push(client2)
+      @server.accept_new_client("Player 2")
+      @server.create_game_if_possible
+
+      client1.capture_output
+      client2.capture_output
+    end
+
+    it 'it plays a single round and shows round result to players' do
+      game=@server.games[0]
+      game.start
+      
+      game.play_round
+      
+      # {winning_player.name} took a #{cards_on_table_s} with a #{winning_card}
+      expect(client1.capture_output).to match /took a/
+      expect(client2.capture_output).to match /took a/
+    end
+
+    
+
+
   end
   
 
