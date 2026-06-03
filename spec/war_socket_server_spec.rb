@@ -101,45 +101,61 @@ describe WarSocketServer do
       @clients.push client2
       @server.accept_new_client('Player 2')
 
-      #@server.create_game_if_possible
     end
 
-    it 'sends message check_ready! to each client' do
-      expect(@server.clients[0]).to receive(:check_ready!)
-      expect(@server.clients[1]).to receive(:check_ready!)
+    context 'when both clients are not ready' do
+      it 'returns false' do
+        @server.clients[0].is_ready=false
+        @server.clients[1].is_ready=false
 
-      @server.clients_ready?
-    end
+        result=@server.clients_ready?
 
-    it 'returns false if both clients are not ready' do
-      @server.clients[0].is_ready=false
-      @server.clients[1].is_ready=false
-
-      result=@server.clients_ready?
-
-      expect(result).to eq false
+        expect(result).to eq false
+      end
       
     end
 
-    it 'returns false if one client is not ready' do
-      @server.clients[0].is_ready=false
-      @server.clients[1].is_ready=true
+    context 'when one client is not ready and one is' do
+      it 'returns false' do
+        @server.clients[0].is_ready=false
+        @server.clients[1].is_ready=true
 
-      result=@server.clients_ready?
+        result=@server.clients_ready?
 
-      expect(result).to eq false
-      
+        expect(result).to eq false
+        
+      end
     end
 
-    it 'returns true if all clients are ready' do
-      @server.clients[0].is_ready=true
-      @server.clients[1].is_ready=true
+    context 'when all clients are ready' do
 
-      result=@server.clients_ready?
+      it 'calls check_ready! on all clients' do
+        @server.clients[0].is_ready=true
+        @server.clients[1].is_ready=true
 
-      expect(result).to eq false
+        expect(@server.clients[0]).to receive(:check_ready!)
+        expect(@server.clients[1]).to receive(:check_ready!)
+
+        @server.clients_ready?
+        
+      end
+
+      it 'returns true' do
+        @server.clients[0].is_ready=true
+        @server.clients[1].is_ready=true
+
+        result=@server.clients_ready?
+
+        expect(result).to eq true
+        
+      end
       
     end
+    
+
+    
+
+    
 
 
 

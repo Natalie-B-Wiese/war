@@ -56,10 +56,10 @@ class WarSocketServer
 
   def clients_ready?
     clients.each do |client|
-      # TODO: if the message has been sent, then ask for a response
-      #read_nonblock(1000) look at capture_output method in
       client.check_ready!
+      return false unless client.ready?
     end
+    true
   end
 
   def stop
