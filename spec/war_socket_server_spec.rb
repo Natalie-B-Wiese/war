@@ -67,36 +67,76 @@ describe WarSocketServer do
   #   make sure the next round isn't played until both clients say they are ready to play
   #   ...
 
-  it "each player gets a question that they are ready" do
-    client1 = MockWarSocketClient.new(@server.port_number)
-    @clients.push(client1)
-    @server.accept_new_client("Player 1")
+  describe '#try_play_round' do
+    let(:client1) {MockWarSocketClient.new(@server.port_number)}
+    let(:client2) {MockWarSocketClient.new(@server.port_number)}
+
+    before do
+      @clients.push(client1)
+      @server.accept_new_client("Player 1")
+
+      @clients.push(client2)
+      @server.accept_new_client("Player 2")
+      @server.create_game_if_possible
+
+      client1.capture_output
+      client2.capture_output
+    end
+
+    it "each player gets a question that they are ready only once" do
+      game=@server.games[0]
+      game.start
+
+      @server.try_play_round(game)
+      expect(client1.capture_output).to match /ready/i
+      expect(client2.capture_output).to match /ready/i
+
+      @server.try_play_round(game)
+      client1.capture_output
+      client2.capture_output
+
+      @server.try_play_round(game)
+      expect(client1.capture_output).to be_empty
+      expect(client2.capture_output).to be_empty
+
+    end
 
 
-    client2 = MockWarSocketClient.new(@server.port_number)
-    @clients.push(client2)
-    @server.accept_new_client("Player 2")
-    @server.create_game_if_possible
+    it 'when one player is ready, messages are correct for both players' do
+      game=@server.games[0]
+      game.start
 
-    client1.capture_output
-    client2.capture_output
+      @server.try_play_round(game)
+      client1.capture_output
+      client2.capture_output
+      
+      client1.provide_input('I am sooooo ready')
+      @server.try_play_round(game)
+      expect(client1.capture_output).to match /waiting/i
+      expect(client2.capture_output).to be_empty
+    end
 
-    @server.games[0].try_play_round
-    expect(client1.capture_output).to match /ready/
-    expect(client2.capture_output).to match /ready/
+    it 'when all player are ready sends a both player ready message to both players' do
+      game=@server.games[0]
+      game.start
 
-    @server.games[0].try_play_round
-    expect(client1.capture_output).to be_empty
-    expect(client2.capture_output).to be_empty
+      @server.try_play_round(game)
+      client1.capture_output
+      client2.capture_output
+      
+      client1.provide_input('I am sooooo ready')
+      @server.try_play_round(game)
+      client1.capture_output
+      client2.capture_output
 
-    client1.provide_input('I am sooooo ready')
-    expect(client1.capture_output).to match /waiting/
-    expect(client2.capture_output).to be_empty
+      client2.provide_input('\n')
 
-    client2.provide_input('\n')
-    expect(client2.capture_output).to match /both/
-    expect(client1.capture_output).to match /both/
+      @server.try_play_round(game)
+      expect(client2.capture_output).to match /both/i
+      expect(client1.capture_output).to match /both/i
+    end
     
   end
+  
 
 end

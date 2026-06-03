@@ -7,7 +7,6 @@ require_relative '../lib/client'
 require_relative 'mock_war_socket_client'
 
 
-
 describe ServerGame do
   before(:each) do
     @clients = []

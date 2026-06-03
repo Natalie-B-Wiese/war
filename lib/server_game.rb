@@ -14,19 +14,26 @@ class ServerGame
     clients.all? {|client| client.ready? }
   end
 
-  # untested
+  # returns the array of clients that are ready
+  def ready_clients
+    clients.select {|client| client.ready? }
+  end
+
+  # Should this jsut be part of the initailize method of this server game?
   def start
     game.start
   end
 
-  # untested
-  def play_round
-    game.play_round
-  end
 
-  # untested
   def try_play_round
-    play_round if clients_ready?      
+    if clients_ready?
+      clients.each {|client| client.puts "Both players are ready!"}
+      play_round
+    else
+      ready_clients.each do |client|
+        client.puts("Waiting for remaining players to confirm...")
+      end
+    end
   end
 
   # untested
@@ -34,14 +41,9 @@ class ServerGame
     game.winner
   end
 
-  #  war_runner code:
-  #   game.start
-
-  #   until game.winner do
-  #     player_ready?
-
-  #     puts game.play_round
-  #   end
-  #   puts "Winner: #{game.winner.name}"
+  private
+  def play_round
+    game.play_round
+  end
 
 end

@@ -51,7 +51,15 @@ class WarSocketServer
   end
 
   def run_game(game)
+    start_game(game)
+    game.try_play_round(game)
+  end
+
+  def start_game(game)
     game.start
+  end
+
+  def try_play_round(game)
     game.try_play_round
   end
 
