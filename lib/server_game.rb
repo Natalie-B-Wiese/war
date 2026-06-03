@@ -10,9 +10,8 @@ class ServerGame
   def clients_ready?
     clients.each do |client|
       client.check_ready!
-      return false unless client.ready?
     end
-    true
+    clients.all? {|client| client.ready? }
   end
 
   # untested
@@ -23,6 +22,16 @@ class ServerGame
   # untested
   def play_round
     game.play_round
+  end
+
+  # untested
+  def try_play_round
+    play_round if clients_ready?      
+  end
+
+  # untested
+  def winner
+    game.winner
   end
 
   #  war_runner code:

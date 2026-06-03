@@ -10,7 +10,7 @@ while true do
     rescue IO::WaitReadable
     end
   end
-  if output.include?(":")
+  if output.include?("->")
     print output + ' '
     socket.puts(gets.chomp)
   else

@@ -1,25 +1,45 @@
 require 'socket'
+require_relative '../lib/war_socket_server'
 
 require_relative '../lib/client'
 
-class MockSocket
-  def puts(message)
-    return message
-  end
 
-  def read_nonblock(bytes)
-    return true
-  end
-end
+require_relative '../lib/server_game'
+require_relative '../lib/war_game'
+require_relative '../lib/client'
+require_relative 'mock_war_socket_client'
+require_relative 'mock_war_socket'
+
 
 #initialize(socket, name)
   #Sets @socket to socket
   #sets @name to name
   # initializes is_ready and is_message_sent to false
 describe Client do
+
+  before(:each) do
+    @clients = []
+    @server = WarSocketServer.new
+    @server.start
+    sleep 0.1 # Ensure server is ready for clients
+  end
+
+  after(:each) do
+    @server.stop
+    @clients.each do |client|
+      client.close
+    end
+  end
+
+  
   describe '#initialize' do
-    let(:socket) { 'socket' }
+
+    let(:socket) {MockWarSocket.new}
     let(:client) {Client.new(socket, 'Player 1')}
+
+    #@clients.push client1
+    #@server.accept_new_client('Player 1')
+    #expect(client1.capture_output).to match /welcome/i
 
     it 'sets socket correctly' do
       expect(client.socket).to eq socket
@@ -40,13 +60,14 @@ describe Client do
 
   # puts (message)
   describe '#puts' do
-    let(:socket) { MockSocket.new }
+    let(:socket) {MockWarSocket.new}
     let(:client) {Client.new(socket, 'Player 1')}
 
     # prints the specified message to the socket by using a puts
     it 'calls puts to the socket' do
-      result=client.puts('Hello world')
-      expect(result).to eq 'Hello world'
+      message="Hello world"
+      expect(socket).to receive(:puts).with(message)
+      client.puts(message)
     end
 
   end
@@ -55,7 +76,7 @@ describe Client do
   # returns true if @is_ready is true
   # returns false if @is_ready is false
   describe '#ready?' do
-    let(:socket) { MockSocket.new }
+    let(:socket) {MockWarSocket.new}
     let(:client) {Client.new(socket, 'Player 1')}
 
     context 'when is_ready is false' do
@@ -77,7 +98,7 @@ describe Client do
   end
 
   describe '#received_message?' do
-    let(:socket) { MockSocket.new }
+    let(:socket) {MockWarSocket.new}
     let(:client) {Client.new(socket, 'Player 1')}
 
     context 'when is_message_sent is false' do
@@ -103,15 +124,16 @@ describe Client do
   # It makes is_message_sent to true
   # It updates is_ready based on read_socket
   describe '#check_ready!' do
-    let(:socket) { MockSocket.new }
+    let(:socket) {MockWarSocket.new}
     let(:client) {Client.new(socket, 'Player 1')}
+    let(:ready_message) {"Are you ready?"}
 
     context 'if the player is not ready and has not received a message' do
-      it 'prints Are you ready? to the socket' do
+      it 'prints ready message to the socket' do
         client.is_ready=false
         client.is_message_sent=false
 
-        expect(socket).to receive(:puts).with('Are you ready?')
+        expect(socket).to receive(:puts).with(ready_message)
         client.check_ready!
       end
 
@@ -132,23 +154,61 @@ describe Client do
     end
 
     context 'if the player is not ready and has received a message' do
-      it 'does not print Are you ready? to the socket' do
+      it 'does not print ready message to the socket' do
         client.is_ready=false
         client.is_message_sent=true
 
-        expect(socket).to_not receive(:puts).with('Are you ready?')
+        expect(socket).to_not receive(:puts).with(ready_message)
         client.check_ready!
       end
 
-      it 'updates is_ready to be value of read_socket' do
+      it 'calls read_socket' do
         client.is_ready=false
         client.is_message_sent=true
+
+        expect(client).to receive(:read_socket)
         client.check_ready!
-        expect(client.is_ready).to eq true
       end
+
+      context 'when no input given' do
+        it 'sets is_ready to false' do
+          client.is_ready=false
+          client.is_message_sent=true
+
+          client.instance_variable_set(:@output, '')
+          client.check_ready!
+          expect(client.is_ready).to eq false
+        end
+      end
+
+      context 'when next line given' do
+        it 'sets is_ready to true' do
+          client.is_ready=false
+          client.is_message_sent=true
+
+          client.instance_variable_set(:@output, '\n')
+          client.check_ready!
+          expect(client.is_ready).to eq true
+        end
+      end
+
+      context 'when some string is given' do
+        it 'sets is_ready to true' do
+          client.is_ready=false
+          client.is_message_sent=true
+
+          client.instance_variable_set(:@output, 'WAR!!!')
+          client.check_ready!
+          expect(client.is_ready).to eq true
+        end
+      end
+
+      
     end
 
+    
     context 'if the player is ready' do
+      
       it 'does not print Are you ready? to the socket' do
         client.is_ready=true
 

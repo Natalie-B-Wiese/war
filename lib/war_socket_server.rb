@@ -51,10 +51,11 @@ class WarSocketServer
   end
 
   def run_game(game)
-    #game.start
-    # wait until all players are ready
-    # game.play_round
+    game.start
+    game.try_play_round
   end
+
+  
 
 
   def stop

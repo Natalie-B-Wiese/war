@@ -1,29 +1,6 @@
 require 'socket'
 require_relative '../lib/war_socket_server'
-
-class MockWarSocketClient
-  attr_reader :socket
-  attr_reader :output
-
-  def initialize(port)
-    @socket = TCPSocket.new('localhost', port)
-  end
-
-  def provide_input(text)
-    @socket.puts(text)
-  end
-
-  def capture_output(delay=0.1)
-    sleep(delay)
-    @output = @socket.read_nonblock(1000) # not gets which blocks
-  rescue IO::WaitReadable
-    @output = ""
-  end
-
-  def close
-    @socket.close if @socket
-  end
-end
+require_relative 'mock_war_socket_client'
 
 describe WarSocketServer do
   before(:each) do
@@ -90,5 +67,36 @@ describe WarSocketServer do
   #   make sure the next round isn't played until both clients say they are ready to play
   #   ...
 
+  it "each player gets a question that they are ready" do
+    client1 = MockWarSocketClient.new(@server.port_number)
+    @clients.push(client1)
+    @server.accept_new_client("Player 1")
+
+
+    client2 = MockWarSocketClient.new(@server.port_number)
+    @clients.push(client2)
+    @server.accept_new_client("Player 2")
+    @server.create_game_if_possible
+
+    client1.capture_output
+    client2.capture_output
+
+    @server.games[0].try_play_round
+    expect(client1.capture_output).to match /ready/
+    expect(client2.capture_output).to match /ready/
+
+    @server.games[0].try_play_round
+    expect(client1.capture_output).to be_empty
+    expect(client2.capture_output).to be_empty
+
+    client1.provide_input('I am sooooo ready')
+    expect(client1.capture_output).to match /waiting/
+    expect(client2.capture_output).to be_empty
+
+    client2.provide_input('\n')
+    expect(client2.capture_output).to match /both/
+    expect(client1.capture_output).to match /both/
+    
+  end
 
 end
