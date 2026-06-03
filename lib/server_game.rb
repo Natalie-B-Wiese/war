@@ -6,6 +6,13 @@ class ServerGame
     @game=game_type.new
   end
 
+  # prints the winner to all players
+  def game_over
+    @clients.each do |client|
+      client.puts("Winner: #{winner.name}")
+    end
+  end
+
 
   def clients_ready?
     clients.each do |client|
@@ -36,7 +43,6 @@ class ServerGame
     end
   end
 
-  # untested
   def winner
     game.winner
   end

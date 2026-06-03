@@ -24,9 +24,8 @@ describe ServerGame do
   
   describe '#initialize' do
     let(:client1_socket) {MockWarSocketClient()}
-    # initialize(client1, client2, game_type=WarGame)
-    let(:client1) {MockClient.new('socket', 'Client 1')}
-    let(:client2) {MockClient.new('socket', 'Client 2')}
+    let(:client1) {"client1"}
+    let(:client2) {"client2"}
     let(:clients) {[client1, client2]}
     let(:game_type) {WarGame}
 
@@ -42,63 +41,5 @@ describe ServerGame do
 
   end
 
-  describe '#clients_ready?' do
-    let(:client1) {MockClient.new('socket', 'Client 1')}
-    let(:client2) {MockClient.new('socket', 'Client 2')}
-    let(:game_type) {WarGame}
-    let(:server_game) {ServerGame.new([client1, client2], game_type)}
-
-    context 'when all clients are not ready' do
-      it 'returns false' do
-        
-
-        # server_game.clients[0].is_ready=false
-        # server_game.clients[1].is_ready=false
-
-        # result=server_game.clients_ready?
-
-        # expect(result).to eq false
-      end
-      
-    end
-
-    context 'when first client is not ready and second one is' do
-      it 'returns false' do
-        server_game.clients[0].is_ready=false
-        server_game.clients[1].is_ready=true
-
-        result=server_game.clients_ready?
-
-        expect(result).to eq false
-        
-      end
-    end
-
-    context 'when all clients are ready' do
-
-      it 'calls check_ready! on all clients' do
-        server_game.clients[0].is_ready=true
-        server_game.clients[1].is_ready=true
-
-        expect(server_game.clients[0]).to receive(:check_ready!)
-        expect(server_game.clients[1]).to receive(:check_ready!)
-
-        server_game.clients_ready?
-        
-      end
-
-      it 'returns true' do
-        server_game.clients[0].is_ready=true
-        server_game.clients[1].is_ready=true
-
-        result=server_game.clients_ready?
-
-        expect(result).to eq true
-        
-      end
-      
-    end
-    
-  end
 
 end

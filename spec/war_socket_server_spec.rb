@@ -168,7 +168,7 @@ describe WarSocketServer do
     
   end
 
-  context 'play_round' do
+  context '#play_round' do
     let(:client1) {MockWarSocketClient.new(@server.port_number)}
     let(:client2) {MockWarSocketClient.new(@server.port_number)}
 
@@ -184,7 +184,7 @@ describe WarSocketServer do
       client2.capture_output
     end
 
-    it 'it plays a single round and shows round result to players' do
+    it 'it shows round result to all players' do
       game=@server.games[0]
       game.start
       
@@ -195,7 +195,36 @@ describe WarSocketServer do
       expect(client2.capture_output).to match /took a/
     end
 
-    
+  end
+
+  describe '#play_game' do
+    let(:client1) {MockWarSocketClient.new(@server.port_number)}
+    let(:client2) {MockWarSocketClient.new(@server.port_number)}
+    before do
+      @clients.push(client1)
+      @server.accept_new_client("Player 1")
+
+      @clients.push(client2)
+      @server.accept_new_client("Player 2")
+      @server.create_game_if_possible
+
+      client1.capture_output
+      client2.capture_output
+    end
+
+    it "prints the result to all players when there is a winner" do
+      game=@server.games[0]
+      game.start
+
+      # force player 1 to run out of cards
+      game.game.player1.instance_variable_set(:@cards, [])
+      
+      @server.play_game(game)
+
+      expect(client1.capture_output).to match /winner/i
+      expect(client2.capture_output).to match /winner/i
+
+    end
 
 
   end
