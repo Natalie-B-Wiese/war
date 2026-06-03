@@ -14,15 +14,14 @@ class ServerGame
   end
 
   def clients_ready?
-    clients.each do |client|
-      client.check_ready!
-    end
-    clients.all? { |client| client.ready? }
+    clients.each(&:check_ready!)
+
+    clients.all?(&:ready?)
   end
 
   # returns the array of clients that are ready
   def ready_clients
-    clients.select { |client| client.ready? }
+    clients.select(&:ready?)
   end
 
   # Should this jsut be part of the initailize method of this server game?
@@ -32,13 +31,15 @@ class ServerGame
 
   def try_play_round
     if clients_ready?
-      clients.each { |client| client.puts 'Both players are ready!' }
+      puts_to_clients(clients, 'Both players are ready!')
       play_round
     else
-      ready_clients.each do |client|
-        client.puts('Waiting for remaining players to confirm...')
-      end
+      puts_to_clients(ready_clients, 'Waiting for remaining players to confirm...')
     end
+  end
+
+  def puts_to_clients(clients_array, message)
+    clients_array.each { |client| client.puts message }
   end
 
   def winner

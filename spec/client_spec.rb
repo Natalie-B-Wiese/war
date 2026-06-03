@@ -5,7 +5,6 @@ require_relative '../lib/client'
 
 require_relative '../lib/server_game'
 require_relative '../lib/war_game'
-require_relative '../lib/client'
 require_relative 'mock_war_socket_client'
 require_relative 'mock_war_socket'
 

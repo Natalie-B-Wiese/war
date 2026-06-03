@@ -16,40 +16,51 @@ class WarGame
     deal
   end
 
+  def cards_on_table_s(cards_on_table)
+    cards_on_table_s = ''
+    cards_on_table[0...-1].each do |card|
+      cards_on_table_s += "#{card}, "
+    end
+    cards_on_table_s += 'and a ' unless cards_on_table.length == 1
+
+    cards_on_table_s += cards_on_table[-1].to_s
+
+    cards_on_table_s
+  end
+
   def play_round(cards_on_table = [])
     winning_player = round_winner
 
     if winning_player.nil?
-      cards_on_table.push(player1.take_top_card)
-      cards_on_table.push(player2.take_top_card)
-      play_round(cards_on_table)
+      handle_round_tie(cards_on_table)
     else
-      losing_player = opposite_player(winning_player)
-      losing_card = losing_player.take_top_card
-      winning_card = winning_player.take_top_card
-
-      cards_on_table.push(losing_card)
-
-      cards_on_table_s = ''
-      cards_on_table[0...-1].each do |card|
-        cards_on_table_s += "#{card}, "
-      end
-      cards_on_table_s += 'and a ' unless cards_on_table.length == 1
-
-      cards_on_table_s += cards_on_table[-1].to_s
-
-      cards_on_table.push(winning_card)
-
-      # add the cards to the winning player
-      cards_on_table.each do |card|
-        winning_player.add_card(card)
-      end
-      "#{winning_player.name} took a #{cards_on_table_s} with a #{winning_card}"
+      handle_round_winner(winning_player, opposite_player(winning_player), cards_on_table)
     end
   end
 
+  def handle_round_tie(cards_on_table)
+    cards_on_table.push(player1.take_top_card)
+    cards_on_table.push(player2.take_top_card)
+    play_round(cards_on_table)
+  end
+
+  def handle_round_winner(winning_player, losing_player, cards_on_table)
+    losing_card = losing_player.take_top_card
+    winning_card = winning_player.take_top_card
+
+    cards_on_table.push(losing_card)
+    cards_s = cards_on_table_s(cards_on_table)
+
+    cards_on_table.push(winning_card)
+
+    # add the cards to the winning player
+    winning_player.add_cards(cards_on_table)
+
+    "#{winning_player.name} took a #{cards_s} with a #{winning_card}"
+  end
+
   def deal
-    while deck.cards_left > 0
+    until deck.cards_left.zero?
       player1.add_card(deck.take_top_card)
       player2.add_card(deck.take_top_card)
     end
@@ -75,8 +86,8 @@ class WarGame
   end
 
   def winner
-    return player2 if player1.card_count == 0
-    return player1 if player2.card_count == 0
+    return player2 if player1.card_count.zero?
+    return player1 if player2.card_count.zero?
 
     nil
   end

@@ -18,6 +18,12 @@ class WarPlayer
     cards.push(card)
   end
 
+  def add_cards(cards)
+    cards.each do |card|
+      add_card(card)
+    end
+  end
+
   def take_top_card
     cards.shift
   end
