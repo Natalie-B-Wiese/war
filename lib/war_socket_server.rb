@@ -43,7 +43,7 @@ class WarSocketServer
       client.puts 'War is starting...'
     end
 
-    new_game=ServerGame.new(clients[0], clients[1], WarGame)
+    new_game=ServerGame.new([clients[0], clients[1]], WarGame)
     games << new_game
 
     return new_game
@@ -52,15 +52,10 @@ class WarSocketServer
 
   def run_game(game)
     #game.start
+    # wait until all players are ready
+    # game.play_round
   end
 
-  def clients_ready?
-    clients.each do |client|
-      client.check_ready!
-      return false unless client.ready?
-    end
-    true
-  end
 
   def stop
     @server.close if @server

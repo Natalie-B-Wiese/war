@@ -1,11 +1,28 @@
 class ServerGame
-  attr_reader :client1, :client2, :game
+  attr_reader :clients, :game
 
-  def initialize(client1, client2, game_type=WarGame)
-    @client1=client1
-    @client2=client2
-
+  def initialize(clients, game_type=WarGame)
+    @clients=clients
     @game=game_type.new
+  end
+
+
+  def clients_ready?
+    clients.each do |client|
+      client.check_ready!
+      return false unless client.ready?
+    end
+    true
+  end
+
+  # untested
+  def start
+    game.start
+  end
+
+  # untested
+  def play_round
+    game.play_round
   end
 
   #  war_runner code:
