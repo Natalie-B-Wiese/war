@@ -4,9 +4,7 @@ require_relative 'client'
 require_relative 'war_game'
 
 class WarSocketServer
-
-  def initialize
-  end
+  def initialize; end
 
   def port_number
     3336
@@ -25,15 +23,15 @@ class WarSocketServer
     @clients ||= []
   end
 
-  def accept_new_client(player_name = "Random Player")
+  def accept_new_client(player_name = 'Random Player')
     client_socket = @server.accept_nonblock
-    client=Client.new(client_socket, player_name)
+    client = Client.new(client_socket, player_name)
 
     clients << client
     # associate player and client
     client.puts 'Welcome to War!'
   rescue IO::WaitReadable, Errno::EINTR
-    puts "No client to accept"
+    puts 'No client to accept'
   end
 
   def create_game_if_possible
@@ -43,11 +41,10 @@ class WarSocketServer
       client.puts 'War is starting...'
     end
 
-    new_game=ServerGame.new([clients[0], clients[1]], WarGame)
+    new_game = ServerGame.new([clients[0], clients[1]], WarGame)
     games << new_game
 
-    return new_game
-
+    new_game
   end
 
   def run_game(game)
@@ -61,9 +58,7 @@ class WarSocketServer
   end
 
   def game_loop(game)
-    until game.winner
-      try_play_round(game)
-    end
+    try_play_round(game) until game.winner
   end
 
   def start_game(game)
@@ -73,9 +68,6 @@ class WarSocketServer
   def try_play_round(game)
     game.try_play_round
   end
-
-  
-
 
   def stop
     @server.close if @server

@@ -1,7 +1,6 @@
 require_relative '../lib/card_deck'
 require_relative '../lib/playing_card'
 
-
 describe 'CardDeck' do
   it 'Should have 52 cards when created' do
     deck = CardDeck.new
@@ -23,7 +22,6 @@ describe 'CardDeck' do
       card2 = deck.take_top_card
       expect(card1).not_to eq card2
     end
-
   end
 
   describe '#cards_left' do
@@ -42,12 +40,11 @@ describe 'CardDeck' do
 
   describe '#shuffle' do
     it 'shuffles the array' do
-      non_shuffled=CardDeck.new
-      shuffled=CardDeck.new
+      non_shuffled = CardDeck.new
+      shuffled = CardDeck.new
       shuffled.shuffle
 
       expect(non_shuffled.cards).not_to eq shuffled.cards
     end
   end
-
 end

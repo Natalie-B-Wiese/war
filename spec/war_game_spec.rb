@@ -2,10 +2,9 @@ require_relative '../lib/war_game'
 require_relative '../lib/war_player'
 require_relative '../lib/card_deck'
 
-
 describe 'WarGame' do
   let(:game) { WarGame.new }
-  
+
   describe '#initailzie' do
     it 'creates two players and a new deck' do
       expect(game.player1).to be_a(WarPlayer)
@@ -14,23 +13,21 @@ describe 'WarGame' do
     end
   end
 
-
-  describe "#start" do
+  describe '#start' do
     it 'deals the deck to the players' do
       game.start
       expect(game.deck.cards_left).to eq 0
       expect(game.player1.card_count).to_not eq 0
       expect(game.player2.card_count).to_not eq 0
     end
-
   end
 
   describe '#deal' do
     it 'deals 26 cards to each player' do
       game.deal
-      p1_cards=game.player1.cards
-      p2_cards=game.player2.cards
-      halfsize=((CardDeck.new).cards_left)/2
+      p1_cards = game.player1.cards
+      p2_cards = game.player2.cards
+      halfsize = CardDeck.new.cards_left / 2
 
       expect(p1_cards.length).to eq halfsize
       expect(p2_cards.length).to eq halfsize
@@ -40,9 +37,9 @@ describe 'WarGame' do
   describe '#round_winner' do
     context 'when player 1 has a bigger value' do
       it 'returns player 1' do
-        game=WarGame.new
-        winning_card=PlayingCard.new('A', 'Spades')
-        losing_card=PlayingCard.new('2', 'Spades')
+        game = WarGame.new
+        winning_card = PlayingCard.new('A', 'Spades')
+        losing_card = PlayingCard.new('2', 'Spades')
         game.player1.add_card(winning_card)
         game.player2.add_card(losing_card)
 
@@ -52,8 +49,8 @@ describe 'WarGame' do
 
     context 'when player 2 has a bigger value' do
       it 'returns player 2' do
-        winning_card=PlayingCard.new('A', 'Spades')
-        losing_card=PlayingCard.new('2', 'Spades')
+        winning_card = PlayingCard.new('A', 'Spades')
+        losing_card = PlayingCard.new('2', 'Spades')
         game.player1.add_card(losing_card)
         game.player2.add_card(winning_card)
 
@@ -63,8 +60,8 @@ describe 'WarGame' do
 
     context 'when values are equal' do
       it 'returns nil' do
-        card1=PlayingCard.new('A', 'Spades')
-        card2=PlayingCard.new('A', 'Hearts')
+        card1 = PlayingCard.new('A', 'Spades')
+        card2 = PlayingCard.new('A', 'Hearts')
         game.player1.add_card(card1)
         game.player2.add_card(card2)
 
@@ -75,36 +72,33 @@ describe 'WarGame' do
 
   describe '#winner' do
     context 'when both players still have cards' do
-
-      it 'return nil' do  
-        winning_card=PlayingCard.new('A', 'Spades')
-        losing_card=PlayingCard.new('2', 'Spades')
+      it 'return nil' do
+        winning_card = PlayingCard.new('A', 'Spades')
+        losing_card = PlayingCard.new('2', 'Spades')
         game.player1.add_card(winning_card)
         game.player2.add_card(losing_card)
-              
-        result=game.winner
+
+        result = game.winner
         expect(result).to be_nil
       end
     end
 
     context 'when player 1 runs out of cards' do
-
       it 'return player2' do
-        card=PlayingCard.new('A', 'Spades')
+        card = PlayingCard.new('A', 'Spades')
         game.player2.add_card(card)
 
-        result=game.winner
+        result = game.winner
         expect(result).to eq game.player2
       end
     end
 
     context 'when player 2 runs out of cards' do
-
       it 'return player1' do
-        card=PlayingCard.new('A', 'Spades')
+        card = PlayingCard.new('A', 'Spades')
         game.player1.add_card(card)
 
-        result=game.winner
+        result = game.winner
         expect(result).to eq game.player1
       end
     end
@@ -113,54 +107,50 @@ describe 'WarGame' do
   describe '#play_round' do
     context 'when player 1 higher card' do
       it 'player 1 wins the cards' do
-        #GIVEN
-        winning_card=PlayingCard.new('A', 'Spades')
-        losing_card=PlayingCard.new('2', 'Spades')
+        # GIVEN
+        winning_card = PlayingCard.new('A', 'Spades')
+        losing_card = PlayingCard.new('2', 'Spades')
 
         game.player1.add_card(winning_card)
         game.player2.add_card(losing_card)
 
         # WHEN
-        result=game.play_round
-        
+        result = game.play_round
+
         # THEN:
         expect(game.player1.card_count).to eq 2
         expect(game.player2.card_count).to eq 0
         expect(result).to eq 'Player 1 took a 2 of Spades with a A of Spades'
-
       end
-      
     end
 
     context 'when player 2 higher card' do
       it 'player 2 wins the cards' do
-        #GIVEN
-        winning_card=PlayingCard.new('K', 'Diamonds')
-        losing_card=PlayingCard.new('3', 'Hearts')
+        # GIVEN
+        winning_card = PlayingCard.new('K', 'Diamonds')
+        losing_card = PlayingCard.new('3', 'Hearts')
 
         game.player1.add_card(losing_card)
         game.player2.add_card(winning_card)
 
         # WHEN
-        result=game.play_round
-        
+        result = game.play_round
+
         # THEN:
         expect(game.player1.card_count).to eq 0
         expect(game.player2.card_count).to eq 2
         expect(result).to eq 'Player 2 took a 3 of Hearts with a K of Diamonds'
-
       end
-      
     end
 
     context 'tie' do
       it 'play_round is called until a player wins and all cards are added to winning player' do
-        #GIVEN
-        card1=PlayingCard.new('K', 'Diamonds')
-        card2=PlayingCard.new('K', 'Hearts')
+        # GIVEN
+        card1 = PlayingCard.new('K', 'Diamonds')
+        card2 = PlayingCard.new('K', 'Hearts')
 
-        card3=PlayingCard.new('2', 'Diamonds')
-        winning_card=PlayingCard.new('4', 'Spades')
+        card3 = PlayingCard.new('2', 'Diamonds')
+        winning_card = PlayingCard.new('4', 'Spades')
 
         game.player1.add_card(card1)
         game.player2.add_card(card2)
@@ -169,41 +159,36 @@ describe 'WarGame' do
         game.player2.add_card(winning_card)
 
         # WHEN
-        result=game.play_round
-        
+        result = game.play_round
+
         # THEN:
         expect(game.player1.card_count).to eq 0
         expect(game.player2.card_count).to eq 4
         expect(result).to eq 'Player 2 took a K of Diamonds, K of Hearts, and a 2 of Diamonds with a 4 of Spades'
-
       end
-      
     end
-
-    
   end
 
   describe '#opposite_player' do
     context 'when parameter is player 1' do
       it 'returns player 2' do
-        result=game.opposite_player(game.player1)
+        result = game.opposite_player(game.player1)
         expect(result).to eq game.player2
       end
     end
 
     context 'when parameter is player 2' do
       it 'returns player 1' do
-        result=game.opposite_player(game.player2)
+        result = game.opposite_player(game.player2)
         expect(result).to eq game.player1
       end
     end
 
     context 'when parameter is nil' do
       it 'returns nil' do
-        result=game.opposite_player(nil)
+        result = game.opposite_player(nil)
         expect(result).to be_nil
       end
     end
   end
-  
 end

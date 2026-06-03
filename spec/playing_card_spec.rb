@@ -2,70 +2,63 @@ require_relative '../lib/playing_card'
 
 describe 'PlayingCard' do
   it 'has a rank and suit' do
-    card=PlayingCard.new('A', 'Spades')
+    card = PlayingCard.new('A', 'Spades')
     expect(card.rank).to eq 'A'
     expect(card.suit).to eq 'Spades'
   end
 
   it 'cards of the same rank and suit are equal' do
-    card1=PlayingCard.new('A', 'Spades')
-    card2=PlayingCard.new('K', 'Spades')
-    card3=PlayingCard.new('A', 'Spades')
+    card1 = PlayingCard.new('A', 'Spades')
+    card2 = PlayingCard.new('K', 'Spades')
+    card3 = PlayingCard.new('A', 'Spades')
 
     expect(card1).not_to eq card2
     expect(card1).to eq card3
   end
 
   it 'should allow valid ranks' do
-    expect {
+    expect do
       PlayingCard.new('15', 'Spades')
-  }.to raise_error PlayingCard::InvalidRank  
+    end.to raise_error PlayingCard::InvalidRank
   end
 
   it 'should allow valid suits' do
-    expect {
+    expect do
       PlayingCard.new('2', 'Minecraft')
-  }.to raise_error PlayingCard::InvalidSuit
+    end.to raise_error PlayingCard::InvalidSuit
   end
 
   describe '#value' do
-
     it 'returns the correct value of a suit' do
-      card1=PlayingCard.new('2', 'Diamonds')
-      result1=card1.value
+      card1 = PlayingCard.new('2', 'Diamonds')
+      result1 = card1.value
       expect(result1).to eq 0
 
-      card2=PlayingCard.new('J', 'Diamonds')
-      result2=card2.value
+      card2 = PlayingCard.new('J', 'Diamonds')
+      result2 = card2.value
       expect(result2).to eq 9
 
-      card3=PlayingCard.new('A', 'Diamonds')
-      result3=card3.value
+      card3 = PlayingCard.new('A', 'Diamonds')
+      result3 = card3.value
       expect(result3).to eq 12
-
-      
     end
   end
 
   describe '#to_s' do
     context 'when rank is 2 and suit is Diamonds' do
       it 'returns correct result' do
-        card=PlayingCard.new('2', 'Diamonds')
-        result=card.to_s
-        expect(result).to eq "2 of Diamonds"
+        card = PlayingCard.new('2', 'Diamonds')
+        result = card.to_s
+        expect(result).to eq '2 of Diamonds'
       end
     end
 
     context 'when rank is K and suit is Hearts' do
       it 'returns correct result' do
-        card=PlayingCard.new('K', 'Hearts')
-        result=card.to_s
-        expect(result).to eq "K of Hearts"
+        card = PlayingCard.new('K', 'Hearts')
+        result = card.to_s
+        expect(result).to eq 'K of Hearts'
       end
     end
-    
   end
-
-
-
 end

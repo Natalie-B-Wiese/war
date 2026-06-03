@@ -1,7 +1,5 @@
 class MockWarSocket
-  def puts(message)
-  end
+  def puts(message); end
 
-  def read_nonblock(bytes)
-  end
+  def read_nonblock(bytes); end
 end

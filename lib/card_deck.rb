@@ -1,10 +1,9 @@
 require_relative '../lib/playing_card'
 class CardDeck
-
   attr_accessor :cards
 
   def initialize
-    @cards=PlayingCard::SUITS.flat_map do |suit|
+    @cards = PlayingCard::SUITS.flat_map do |suit|
       PlayingCard::RANKS.map do |rank|
         PlayingCard.new(rank, suit)
       end
@@ -20,11 +19,9 @@ class CardDeck
   end
 
   def shuffle
-    shuffled=cards.shuffle
-    while shuffled==cards
-      shuffled=cards.shuffle
-    end
+    shuffled = cards.shuffle
+    shuffled = cards.shuffle while shuffled == cards
 
-    self.cards=shuffled
+    self.cards = shuffled
   end
 end
