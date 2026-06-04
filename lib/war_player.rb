@@ -6,14 +6,6 @@ class WarPlayer
     @cards = []
   end
 
-  def top_card
-    cards[0]
-  end
-
-  def top_card_value
-    top_card.value
-  end
-
   def add_card(card)
     cards.push(card)
   end
@@ -22,6 +14,14 @@ class WarPlayer
     cards.each do |card|
       add_card(card)
     end
+  end
+
+  def top_card
+    cards[0]
+  end
+
+  def top_card_value
+    top_card.value
   end
 
   def take_top_card

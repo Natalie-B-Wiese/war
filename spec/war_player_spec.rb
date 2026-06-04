@@ -2,11 +2,13 @@ require_relative '../lib/war_player'
 require_relative '../lib/playing_card'
 
 describe 'WarPlayer' do
-  it 'has a name and cards' do
-    player = WarPlayer.new('Natalie')
-    expect(player.name).to eq 'Natalie'
-    # expect(player.cards).to be_an Array
-    expect(player.cards).to be_empty
+  describe '#initialize' do
+    it 'has a name and cards' do
+      player = WarPlayer.new('Natalie')
+
+      expect(player.name).to eq 'Natalie'
+      expect(player.cards).to be_empty
+    end
   end
 
   describe '#add_card' do
@@ -20,6 +22,19 @@ describe 'WarPlayer' do
 
       player.add_card(card2)
       expect(player.cards[1]).to eq(card2)
+    end
+  end
+
+  describe '#add_cards' do
+    it 'adds multiple cards' do
+      player = WarPlayer.new('Natalie')
+      card1 = PlayingCard.new('3', 'Diamonds')
+      card2 = PlayingCard.new('5', 'Hearts')
+
+      card_array = [card1, card2]
+
+      player.add_cards(card_array)
+      expect(player.cards).to eq(card_array)
     end
   end
 
