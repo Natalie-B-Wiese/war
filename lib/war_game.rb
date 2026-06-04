@@ -17,15 +17,14 @@ class WarGame
   end
 
   def cards_on_table_s(cards_on_table)
-    cards_on_table_s = ''
-    cards_on_table[0...-1].each do |card|
-      cards_on_table_s += "#{card}, "
+    case cards_on_table.length
+    when 1
+      cards_on_table[0].to_s
+    when 2
+      "#{cards_on_table[0]} and a #{cards_on_table[1]}"
+    else
+      cards_on_table[0...-1].join(', ') + ", and a #{cards_on_table[-1]}"
     end
-    cards_on_table_s += 'and a ' unless cards_on_table.length == 1
-
-    cards_on_table_s += cards_on_table[-1].to_s
-
-    cards_on_table_s
   end
 
   def play_round(cards_on_table = [])

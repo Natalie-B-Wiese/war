@@ -3,17 +3,68 @@ require_relative '../lib/war_player'
 require_relative '../lib/card_deck'
 
 describe 'WarGame' do
-  let(:game) { WarGame.new }
+  describe '#initialize' do
+    context 'when no parameters are given' do
+      let(:game) { WarGame.new }
 
-  describe '#initailzie' do
-    it 'creates two players and a new deck' do
-      expect(game.player1).to be_a(WarPlayer)
-      expect(game.player2).to be_a(WarPlayer)
-      expect(game.deck).to be_a(CardDeck)
+      it 'creates two players and a new deck' do
+        expect(game.player1).to be_a(WarPlayer)
+        expect(game.player2).to be_a(WarPlayer)
+        expect(game.deck).to be_a(CardDeck)
+      end
+
+      it 'first player is named Player 1' do
+        expect(game.player1.name).to eq 'Player 1'
+      end
+
+      it 'second player is named Player 2' do
+        expect(game.player2.name).to eq 'Player 2'
+      end
+    end
+
+    context 'when one parameter is given' do
+      let(:name1) { 'Jeff' }
+      let(:game) { WarGame.new(name1) }
+
+      it 'creates two players and a new deck' do
+        expect(game.player1).to be_a(WarPlayer)
+        expect(game.player2).to be_a(WarPlayer)
+        expect(game.deck).to be_a(CardDeck)
+      end
+
+      it 'first player is named same as first parameter' do
+        expect(game.player1.name).to eq name1
+      end
+
+      it 'second player is named Player 2' do
+        expect(game.player2.name).to eq 'Player 2'
+      end
+    end
+
+    context 'when two parameters are given' do
+      let(:name1) { 'Jeff' }
+      let(:name2) { 'Bob' }
+      let(:game) { WarGame.new(name1, name2) }
+
+      it 'creates two players and a new deck' do
+        expect(game.player1).to be_a(WarPlayer)
+        expect(game.player2).to be_a(WarPlayer)
+        expect(game.deck).to be_a(CardDeck)
+      end
+
+      it 'first player is named same as first parameter' do
+        expect(game.player1.name).to eq name1
+      end
+
+      it 'second player is named same as second parameter' do
+        expect(game.player2.name).to eq name2
+      end
     end
   end
 
   describe '#start' do
+    let(:game) { WarGame.new }
+
     it 'deals the deck to the players' do
       game.start
       expect(game.deck.cards_left).to eq 0
@@ -22,7 +73,41 @@ describe 'WarGame' do
     end
   end
 
+  describe '#cards_on_table_s' do
+    let(:game) { WarGame.new }
+
+    let(:card1) { PlayingCard.new('A', 'Spades') }
+    let(:card2) { PlayingCard.new('3', 'Diamonds') }
+    let(:card3) { PlayingCard.new('5', 'Hearts') }
+
+    context 'when parameter contains one card' do
+      it 'returns cards[0].to_s' do
+        cards = [card1]
+        result = game.cards_on_table_s(cards)
+        expect(result).to eq card1.to_s
+      end
+    end
+
+    context 'when parameter contains two cards' do
+      it 'cards are seperated with an "and a"' do
+        cards = [card1, card2]
+        result = game.cards_on_table_s(cards)
+        expect(result).to eq "#{card1} and a #{card2}"
+      end
+    end
+
+    context 'when parameter contains more than two cards' do
+      it 'cards are seperated with commas and last card has an ", and a"' do
+        cards = [card1, card2, card3]
+        result = game.cards_on_table_s(cards)
+        expect(result).to eq "#{card1}, #{card2}, and a #{card3}"
+      end
+    end
+  end
+
   describe '#deal' do
+    let(:game) { WarGame.new }
+
     it 'deals 26 cards to each player' do
       game.deal
       p1_cards = game.player1.cards
@@ -35,6 +120,7 @@ describe 'WarGame' do
   end
 
   describe '#round_winner' do
+    let(:game) { WarGame.new }
     context 'when player 1 has a bigger value' do
       it 'returns player 1' do
         game = WarGame.new
@@ -71,6 +157,8 @@ describe 'WarGame' do
   end
 
   describe '#winner' do
+    let(:game) { WarGame.new }
+
     context 'when both players still have cards' do
       it 'return nil' do
         winning_card = PlayingCard.new('A', 'Spades')
@@ -105,6 +193,8 @@ describe 'WarGame' do
   end
 
   describe '#play_round' do
+    let(:game) { WarGame.new }
+
     context 'when player 1 higher card' do
       it 'player 1 wins the cards' do
         # GIVEN
@@ -170,6 +260,8 @@ describe 'WarGame' do
   end
 
   describe '#opposite_player' do
+    let(:game) { WarGame.new }
+
     context 'when parameter is player 1' do
       it 'returns player 2' do
         result = game.opposite_player(game.player1)

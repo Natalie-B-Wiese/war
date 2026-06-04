@@ -34,7 +34,6 @@ class ServerGame
       puts_to_clients(clients, 'Both players are ready!')
       play_round
     else
-      # TODO: make this message only show once
       ready_clients.each do |client|
         client.try_send_waiting_for_player_message
       end
