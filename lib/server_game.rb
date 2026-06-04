@@ -55,5 +55,12 @@ class ServerGame
       client.reset_variables
       client.puts(round_result)
     end
+
+    # sends message to server
+    puts progress
+  end
+
+  def progress
+    game.progress
   end
 end
