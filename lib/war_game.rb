@@ -16,6 +16,12 @@ class WarGame
     deal
   end
 
+  # returns a brief overview on this game's progress
+  # Returns the cards of both players
+  def progress
+    "#{player1.card_count} vs #{player2.card_count}"
+  end
+
   def cards_on_table_s(cards_on_table)
     case cards_on_table.length
     when 1

@@ -73,6 +73,26 @@ describe 'WarGame' do
     end
   end
 
+  describe '#progress' do
+    let(:game) { WarGame.new }
+
+    before do
+      game.start
+    end
+
+    it 'returns 26 vs 26 at start of game' do
+      result = game.progress
+      expect(result).to eq '26 vs 26'
+    end
+
+    it 'returns correct cards of each player (player1 vs player2)' do
+      game.player2.add_card(game.player1.take_top_card)
+
+      result = game.progress
+      expect(result).to eq '25 vs 27'
+    end
+  end
+
   describe '#cards_on_table_s' do
     let(:game) { WarGame.new }
 
