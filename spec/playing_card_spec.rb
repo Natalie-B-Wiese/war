@@ -1,46 +1,52 @@
 require_relative '../lib/playing_card'
 
 describe 'PlayingCard' do
-  it 'has a rank and suit' do
-    card = PlayingCard.new('A', 'Spades')
-    expect(card.rank).to eq 'A'
-    expect(card.suit).to eq 'Spades'
+  describe '#initialize' do
+    it 'has a rank and suit' do
+      card = PlayingCard.new('A', 'Spades')
+      expect(card.rank).to eq 'A'
+      expect(card.suit).to eq 'Spades'
+    end
+
+    it 'should allow valid ranks' do
+      expect do
+        PlayingCard.new('15', 'Spades')
+      end.to raise_error PlayingCard::InvalidRank
+    end
+
+    it 'should allow valid suits' do
+      expect do
+        PlayingCard.new('2', 'Minecraft')
+      end.to raise_error PlayingCard::InvalidSuit
+    end
   end
 
-  it 'cards of the same rank and suit are equal' do
-    card1 = PlayingCard.new('A', 'Spades')
-    card2 = PlayingCard.new('K', 'Spades')
-    card3 = PlayingCard.new('A', 'Spades')
+  describe '#==' do
+    it 'cards of the same rank and suit are equal' do
+      card1 = PlayingCard.new('A', 'Spades')
+      card2 = PlayingCard.new('K', 'Spades')
+      card3 = PlayingCard.new('A', 'Spades')
 
-    expect(card1).not_to eq card2
-    expect(card1).to eq card3
-  end
-
-  it 'should allow valid ranks' do
-    expect do
-      PlayingCard.new('15', 'Spades')
-    end.to raise_error PlayingCard::InvalidRank
-  end
-
-  it 'should allow valid suits' do
-    expect do
-      PlayingCard.new('2', 'Minecraft')
-    end.to raise_error PlayingCard::InvalidSuit
+      expect(card1).not_to eq card2
+      expect(card1).to eq card3
+    end
   end
 
   describe '#value' do
-    it 'returns the correct value of a suit' do
-      card1 = PlayingCard.new('2', 'Diamonds')
-      result1 = card1.value
-      expect(result1).to eq 0
+    context 'when rank is 2' do
+      it 'returns 0' do
+        card = PlayingCard.new('2', 'Diamonds')
+        result = card.value
+        expect(result).to eq 0
+      end
+    end
 
-      card2 = PlayingCard.new('J', 'Diamonds')
-      result2 = card2.value
-      expect(result2).to eq 9
-
-      card3 = PlayingCard.new('A', 'Diamonds')
-      result3 = card3.value
-      expect(result3).to eq 12
+    context 'when rank is Ace' do
+      it 'returns 0' do
+        card = PlayingCard.new('A', 'Hearts')
+        result = card.value
+        expect(result).to eq 12
+      end
     end
   end
 
